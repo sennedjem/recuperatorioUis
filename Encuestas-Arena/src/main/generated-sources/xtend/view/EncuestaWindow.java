@@ -4,6 +4,7 @@ import encuesta.applicationModel.EncuestaAppModel;
 import encuesta.carrera.Carrera;
 import encuesta.materia.Materia;
 import encuesta.materia.Turno;
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.xtext.xbase.lib.ObjectExtensions;
 import org.eclipse.xtext.xbase.lib.Procedures.Procedure1;
 import org.uqbar.arena.bindings.ObservableProperty;
@@ -11,12 +12,13 @@ import org.uqbar.arena.bindings.PropertyAdapter;
 import org.uqbar.arena.layout.ColumnLayout;
 import org.uqbar.arena.layout.VerticalLayout;
 import org.uqbar.arena.widgets.Button;
-import org.uqbar.arena.widgets.Control;
 import org.uqbar.arena.widgets.Label;
 import org.uqbar.arena.widgets.List;
 import org.uqbar.arena.widgets.Panel;
 import org.uqbar.arena.widgets.Selector;
 import org.uqbar.arena.widgets.TextBox;
+import org.uqbar.arena.widgets.TextFilter;
+import org.uqbar.arena.widgets.TextInputEvent;
 import org.uqbar.arena.windows.SimpleWindow;
 import org.uqbar.arena.windows.WindowOwner;
 import org.uqbar.lacar.ui.model.Action;
@@ -55,8 +57,8 @@ public class EncuestaWindow extends SimpleWindow<EncuestaAppModel> {
     this.crearInformacionParaCursadas(mainPanel);
   }
   
-  public List<String> crearInformacionParaCursadas(final Panel mainPanel) {
-    List<String> _xblockexpression = null;
+  public List<Materia> crearInformacionParaCursadas(final Panel mainPanel) {
+    List<Materia> _xblockexpression = null;
     {
       final Panel columnPanel = new Panel(mainPanel);
       ColumnLayout _columnLayout = new ColumnLayout(2);
@@ -107,52 +109,59 @@ public class EncuestaWindow extends SimpleWindow<EncuestaAppModel> {
       final Panel materiasAgregadas = new Panel(columnPanel);
       VerticalLayout _verticalLayout_1 = new VerticalLayout();
       materiasAgregadas.setLayout(_verticalLayout_1);
-      List<String> _list = new List<String>(materiasAgregadas);
-      final Procedure1<List<String>> _function_3 = new Procedure1<List<String>>() {
-        public void apply(final List<String> it) {
-          it.bindItemsToProperty("descripcionMaterias");
+      List<Materia> _list = new List<Materia>(materiasAgregadas);
+      final Procedure1<List<Materia>> _function_3 = new Procedure1<List<Materia>>() {
+        public void apply(final List<Materia> it) {
+          EncuestaAppModel _modelObject = EncuestaWindow.this.getModelObject();
+          ObservableProperty<Object> _observableProperty = new ObservableProperty<Object>(_modelObject, "descripcionMaterias");
+          it.<Object>bindItems(_observableProperty);
+          it.setWidth(200);
+          it.setHeight(100);
         }
       };
-      _xblockexpression = ObjectExtensions.<List<String>>operator_doubleArrow(_list, _function_3);
+      _xblockexpression = ObjectExtensions.<List<Materia>>operator_doubleArrow(_list, _function_3);
     }
     return _xblockexpression;
   }
   
-  public Binding<Object, Control, ControlBuilder> crearInformacionParaPeso(final Panel panel) {
-    Binding<Object, Control, ControlBuilder> _xblockexpression = null;
-    {
-      Label _label = new Label(panel);
-      _label.setText("Elegí la carrera que estudias");
-      Selector<Carrera> _selector = new Selector<Carrera>(panel);
-      final Procedure1<Selector<Carrera>> _function = new Procedure1<Selector<Carrera>>() {
-        public void apply(final Selector<Carrera> it) {
-          it.allowNull(false);
-          it.<Object, ControlBuilder>bindValueToProperty("encuesta.carrera");
-          EncuestaAppModel _modelObject = EncuestaWindow.this.getModelObject();
-          ObservableProperty<Object> _observableProperty = new ObservableProperty<Object>(_modelObject, "carrerasPosibles");
-          Binding<Object, Selector<Carrera>, ListBuilder<Carrera>> propiedadModelos = it.<Object>bindItems(_observableProperty);
-          PropertyAdapter _propertyAdapter = new PropertyAdapter(Carrera.class, "nombre");
-          propiedadModelos.setAdapter(_propertyAdapter);
-        }
-      };
-      ObjectExtensions.<Selector<Carrera>>operator_doubleArrow(_selector, _function);
-      Label _label_1 = new Label(panel);
-      _label_1.setText("Año en el que ingresaste a la facu:");
-      TextBox _textBox = new TextBox(panel);
-      _textBox.<Object, ControlBuilder>bindValueToProperty("encuesta.añoIngreso");
-      Label _label_2 = new Label(panel);
-      _label_2.setText("¿Cuantos finales aprobaste?");
-      TextBox _textBox_1 = new TextBox(panel);
-      _textBox_1.<Object, ControlBuilder>bindValueToProperty("encuesta.finalesAprobados");
-      Label _label_3 = new Label(panel);
-      _label_3.setText("¿Cuantos finales desaprobados?");
-      TextBox _textBox_2 = new TextBox(panel);
-      _textBox_2.<Object, ControlBuilder>bindValueToProperty("encuesta.finalesDesaprobados");
-      Label _label_4 = new Label(panel);
-      _label_4.setText("¿Cuantos cursadas aprobaste?");
-      TextBox _textBox_3 = new TextBox(panel);
-      _xblockexpression = _textBox_3.<Object, ControlBuilder>bindValueToProperty("encuesta.cursadasAprobadas");
-    }
-    return _xblockexpression;
+  public void crearInformacionParaPeso(final Panel panel) {
+    Label _label = new Label(panel);
+    _label.setText("Elegí la carrera que estudias");
+    Selector<Carrera> _selector = new Selector<Carrera>(panel);
+    final Procedure1<Selector<Carrera>> _function = new Procedure1<Selector<Carrera>>() {
+      public void apply(final Selector<Carrera> it) {
+        it.allowNull(false);
+        it.<Object, ControlBuilder>bindValueToProperty("carrera");
+        EncuestaAppModel _modelObject = EncuestaWindow.this.getModelObject();
+        ObservableProperty<Object> _observableProperty = new ObservableProperty<Object>(_modelObject, "carrerasPosibles");
+        Binding<Object, Selector<Carrera>, ListBuilder<Carrera>> propiedadModelos = it.<Object>bindItems(_observableProperty);
+        PropertyAdapter _propertyAdapter = new PropertyAdapter(Carrera.class, "nombre");
+        propiedadModelos.setAdapter(_propertyAdapter);
+      }
+    };
+    ObjectExtensions.<Selector<Carrera>>operator_doubleArrow(_selector, _function);
+    Label _label_1 = new Label(panel);
+    _label_1.setText("Año en el que ingresaste a la facu:");
+    this.crearTextBoxSoloParaNumeros("encuesta.añoIngreso", panel);
+    Label _label_2 = new Label(panel);
+    _label_2.setText("¿Cuantos finales aprobaste?");
+    this.crearTextBoxSoloParaNumeros("encuesta.finalesAprobados", panel);
+    Label _label_3 = new Label(panel);
+    _label_3.setText("¿Cuantos finales desaprobados?");
+    this.crearTextBoxSoloParaNumeros("encuesta.finalesDesaprobados", panel);
+    Label _label_4 = new Label(panel);
+    _label_4.setText("¿Cuantos cursadas aprobaste?");
+    this.crearTextBoxSoloParaNumeros("encuesta.cursadasAprobadas", panel);
+  }
+  
+  public void crearTextBoxSoloParaNumeros(final String propertyASetear, final Panel container) {
+    TextBox _textBox = new TextBox(container);
+    TextBox _withFilter = _textBox.withFilter(new TextFilter() {
+      public boolean accept(final TextInputEvent event) {
+        String _potentialTextResult = event.getPotentialTextResult();
+        return StringUtils.isNumeric(_potentialTextResult);
+      }
+    });
+    _withFilter.<Object, ControlBuilder>bindValueToProperty(propertyASetear);
   }
 }
