@@ -1,6 +1,8 @@
 package view;
 
 import encuesta.applicationModel.EncuestaAppModel;
+import encuesta.materia.Materia;
+import encuesta.materia.Turno;
 import org.eclipse.xtext.xbase.lib.ObjectExtensions;
 import org.eclipse.xtext.xbase.lib.Procedures.Procedure1;
 import org.uqbar.arena.layout.ColumnLayout;
@@ -60,24 +62,24 @@ public class EncuestaWindow extends SimpleWindow<EncuestaAppModel> {
       nuevaMateria.setLayout(_verticalLayout);
       Label _label = new Label(nuevaMateria);
       _label.setText("Materia que estas pensando cursar");
-      Selector<String> _selector = new Selector<String>(nuevaMateria);
-      final Procedure1<Selector<String>> _function = new Procedure1<Selector<String>>() {
-        public void apply(final Selector<String> it) {
+      Selector<Materia> _selector = new Selector<Materia>(nuevaMateria);
+      final Procedure1<Selector<Materia>> _function = new Procedure1<Selector<Materia>>() {
+        public void apply(final Selector<Materia> it) {
           it.bindItemsToProperty("materiasPosibles");
           it.<Object, ControlBuilder>bindValueToProperty("materiaSeleccionada");
         }
       };
-      ObjectExtensions.<Selector<String>>operator_doubleArrow(_selector, _function);
+      ObjectExtensions.<Selector<Materia>>operator_doubleArrow(_selector, _function);
       Label _label_1 = new Label(nuevaMateria);
       _label_1.setText("Turno");
-      Selector<String> _selector_1 = new Selector<String>(nuevaMateria);
-      final Procedure1<Selector<String>> _function_1 = new Procedure1<Selector<String>>() {
-        public void apply(final Selector<String> it) {
+      Selector<Turno> _selector_1 = new Selector<Turno>(nuevaMateria);
+      final Procedure1<Selector<Turno>> _function_1 = new Procedure1<Selector<Turno>>() {
+        public void apply(final Selector<Turno> it) {
           it.bindItemsToProperty("turnosPosibles");
           it.<Object, ControlBuilder>bindValueToProperty("turnoSeleccionado");
         }
       };
-      ObjectExtensions.<Selector<String>>operator_doubleArrow(_selector_1, _function_1);
+      ObjectExtensions.<Selector<Turno>>operator_doubleArrow(_selector_1, _function_1);
       Button _button = new Button(nuevaMateria);
       final Procedure1<Button> _function_2 = new Procedure1<Button>() {
         public void apply(final Button it) {
@@ -134,7 +136,7 @@ public class EncuestaWindow extends SimpleWindow<EncuestaAppModel> {
       Label _label_4 = new Label(panel);
       _label_4.setText("¿Cuantos cursadas aprobaste?");
       TextBox _textBox_3 = new TextBox(panel);
-      _xblockexpression = _textBox_3.<Object, ControlBuilder>bindValueToProperty("cursadasAprobadas");
+      _xblockexpression = _textBox_3.<Object, ControlBuilder>bindValueToProperty("encuesta.cursadasAprobadas");
     }
     return _xblockexpression;
   }

@@ -11,6 +11,8 @@ import org.uqbar.arena.layout.ColumnLayout
 import org.uqbar.arena.layout.VerticalLayout
 import org.uqbar.arena.widgets.Button
 import org.uqbar.arena.widgets.List
+import encuesta.materia.Materia
+import encuesta.materia.Turno
 
 class EncuestaWindow extends SimpleWindow<EncuestaAppModel>{
 	
@@ -40,13 +42,13 @@ class EncuestaWindow extends SimpleWindow<EncuestaAppModel>{
 		nuevaMateria.layout = new VerticalLayout
 		
 		new Label(nuevaMateria).text="Materia que estas pensando cursar"
-		new Selector<String>(nuevaMateria)=>[
+		new Selector<Materia>(nuevaMateria)=>[
 					bindItemsToProperty("materiasPosibles")
 					bindValueToProperty("materiaSeleccionada")
 			]
 		
 		new Label(nuevaMateria).text="Turno"
-		new Selector<String>(nuevaMateria)=>[
+		new Selector<Turno>(nuevaMateria)=>[
 					bindItemsToProperty("turnosPosibles")
 					bindValueToProperty("turnoSeleccionado")
 			]
@@ -82,7 +84,7 @@ class EncuestaWindow extends SimpleWindow<EncuestaAppModel>{
 		new TextBox(panel).bindValueToProperty("encuesta.finalesDesaprobados")
 		
 		new Label(panel).text="¿Cuantos cursadas aprobaste?"
-		new TextBox(panel).bindValueToProperty("cursadasAprobadas")
+		new TextBox(panel).bindValueToProperty("encuesta.cursadasAprobadas")
 	}
 	
 }
