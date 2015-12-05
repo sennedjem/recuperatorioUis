@@ -13,6 +13,9 @@ import org.uqbar.arena.widgets.Button
 import org.uqbar.arena.widgets.List
 import encuesta.materia.Materia
 import encuesta.materia.Turno
+import encuesta.carrera.Carrera
+import org.uqbar.arena.bindings.ObservableProperty
+import org.uqbar.arena.bindings.PropertyAdapter
 
 class EncuestaWindow extends SimpleWindow<EncuestaAppModel>{
 	
@@ -43,14 +46,18 @@ class EncuestaWindow extends SimpleWindow<EncuestaAppModel>{
 		
 		new Label(nuevaMateria).text="Materia que estas pensando cursar"
 		new Selector<Materia>(nuevaMateria)=>[
-					bindItemsToProperty("materiasPosibles")
+					allowNull(false)
 					bindValueToProperty("materiaSeleccionada")
+					var propiedadModelos = bindItems(new ObservableProperty(modelObject, "materiasPosibles"))
+					propiedadModelos.adapter = new PropertyAdapter(typeof(Materia), "nombre")
 			]
 		
 		new Label(nuevaMateria).text="Turno"
 		new Selector<Turno>(nuevaMateria)=>[
+					allowNull(false)			
 					bindItemsToProperty("turnosPosibles")
 					bindValueToProperty("turnoSeleccionado")
+					
 			]
 			
 		new Button(nuevaMateria) =>[
@@ -70,10 +77,14 @@ class EncuestaWindow extends SimpleWindow<EncuestaAppModel>{
 	
 	def crearInformacionParaPeso(Panel panel) {
 		new Label(panel).text="Elegí la carrera que estudias"
-		new Selector<String>(panel) => [
-					bindItemsToProperty("carrerasPosibles")
+			
+		new Selector<Carrera>(panel)=> [
+					allowNull(false)
 					bindValueToProperty("encuesta.carrera")
-			]
+					var propiedadModelos = bindItems(new ObservableProperty(modelObject, "carrerasPosibles"))
+					propiedadModelos.adapter = new PropertyAdapter(typeof(Carrera), "nombre")
+			]	
+			
 		new Label(panel).text="Año en el que ingresaste a la facu:"
 		new TextBox(panel).bindValueToProperty("encuesta.añoIngreso")
 		
