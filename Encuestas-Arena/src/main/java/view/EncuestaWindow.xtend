@@ -16,7 +16,6 @@ import encuesta.materia.Turno
 import encuesta.carrera.Carrera
 import org.uqbar.arena.bindings.ObservableProperty
 import org.uqbar.arena.bindings.PropertyAdapter
-import org.uqbar.arena.bindings.DateAdapter
 import org.uqbar.arena.widgets.TextFilter
 import org.uqbar.arena.widgets.TextInputEvent
 import org.apache.commons.lang.StringUtils
@@ -31,7 +30,10 @@ class EncuestaWindow extends SimpleWindow<EncuestaAppModel>{
 		
 		new Button(actionsPanel) =>[ 
 			caption="EnviarEncuesta"
-			onClick[| new GraciasPorResponderWindow(this).open]]
+			onClick[| 
+				modelObject.validar
+				showInfo("Gracias por responder!")
+			]]
 		
 	}
 	
@@ -59,8 +61,9 @@ class EncuestaWindow extends SimpleWindow<EncuestaAppModel>{
 		new Label(nuevaMateria).text="Turno"
 		new Selector<Turno>(nuevaMateria)=>[
 					allowNull(false)			
-					bindItemsToProperty("turnosPosibles")
 					bindValueToProperty("turnoSeleccionado")
+					bindItems(new ObservableProperty(modelObject, "turnosPosibles"))
+					
 					
 			]
 			
@@ -103,6 +106,9 @@ class EncuestaWindow extends SimpleWindow<EncuestaAppModel>{
 		
 		new Label(panel).text="¿Cuantos cursadas aprobaste?"
 		crearTextBoxSoloParaNumeros("encuesta.cursadasAprobadas",panel)
+		
+		new Label(panel).text="¿Cual es tu mail?"
+		new TextBox(panel).bindValueToProperty("encuesta.mail")
 	}
 	
 	def void crearTextBoxSoloParaNumeros(String propertyASetear, Panel container){

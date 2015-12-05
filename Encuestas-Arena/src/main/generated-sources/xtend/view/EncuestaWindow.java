@@ -12,6 +12,7 @@ import org.uqbar.arena.bindings.PropertyAdapter;
 import org.uqbar.arena.layout.ColumnLayout;
 import org.uqbar.arena.layout.VerticalLayout;
 import org.uqbar.arena.widgets.Button;
+import org.uqbar.arena.widgets.Control;
 import org.uqbar.arena.widgets.Label;
 import org.uqbar.arena.widgets.List;
 import org.uqbar.arena.widgets.Panel;
@@ -25,7 +26,6 @@ import org.uqbar.lacar.ui.model.Action;
 import org.uqbar.lacar.ui.model.ControlBuilder;
 import org.uqbar.lacar.ui.model.ListBuilder;
 import org.uqbar.lacar.ui.model.bindings.Binding;
-import view.GraciasPorResponderWindow;
 
 @SuppressWarnings("all")
 public class EncuestaWindow extends SimpleWindow<EncuestaAppModel> {
@@ -40,8 +40,9 @@ public class EncuestaWindow extends SimpleWindow<EncuestaAppModel> {
         it.setCaption("EnviarEncuesta");
         final Action _function = new Action() {
           public void execute() {
-            GraciasPorResponderWindow _graciasPorResponderWindow = new GraciasPorResponderWindow(EncuestaWindow.this);
-            _graciasPorResponderWindow.open();
+            EncuestaAppModel _modelObject = EncuestaWindow.this.getModelObject();
+            _modelObject.validar();
+            EncuestaWindow.this.showInfo("Gracias por responder!");
           }
         };
         it.onClick(_function);
@@ -87,8 +88,10 @@ public class EncuestaWindow extends SimpleWindow<EncuestaAppModel> {
       final Procedure1<Selector<Turno>> _function_1 = new Procedure1<Selector<Turno>>() {
         public void apply(final Selector<Turno> it) {
           it.allowNull(false);
-          it.bindItemsToProperty("turnosPosibles");
           it.<Object, ControlBuilder>bindValueToProperty("turnoSeleccionado");
+          EncuestaAppModel _modelObject = EncuestaWindow.this.getModelObject();
+          ObservableProperty<Object> _observableProperty = new ObservableProperty<Object>(_modelObject, "turnosPosibles");
+          it.<Object>bindItems(_observableProperty);
         }
       };
       ObjectExtensions.<Selector<Turno>>operator_doubleArrow(_selector_1, _function_1);
@@ -124,34 +127,42 @@ public class EncuestaWindow extends SimpleWindow<EncuestaAppModel> {
     return _xblockexpression;
   }
   
-  public void crearInformacionParaPeso(final Panel panel) {
-    Label _label = new Label(panel);
-    _label.setText("Elegí la carrera que estudias");
-    Selector<Carrera> _selector = new Selector<Carrera>(panel);
-    final Procedure1<Selector<Carrera>> _function = new Procedure1<Selector<Carrera>>() {
-      public void apply(final Selector<Carrera> it) {
-        it.allowNull(false);
-        it.<Object, ControlBuilder>bindValueToProperty("carrera");
-        EncuestaAppModel _modelObject = EncuestaWindow.this.getModelObject();
-        ObservableProperty<Object> _observableProperty = new ObservableProperty<Object>(_modelObject, "carrerasPosibles");
-        Binding<Object, Selector<Carrera>, ListBuilder<Carrera>> propiedadModelos = it.<Object>bindItems(_observableProperty);
-        PropertyAdapter _propertyAdapter = new PropertyAdapter(Carrera.class, "nombre");
-        propiedadModelos.setAdapter(_propertyAdapter);
-      }
-    };
-    ObjectExtensions.<Selector<Carrera>>operator_doubleArrow(_selector, _function);
-    Label _label_1 = new Label(panel);
-    _label_1.setText("Año en el que ingresaste a la facu:");
-    this.crearTextBoxSoloParaNumeros("encuesta.añoIngreso", panel);
-    Label _label_2 = new Label(panel);
-    _label_2.setText("¿Cuantos finales aprobaste?");
-    this.crearTextBoxSoloParaNumeros("encuesta.finalesAprobados", panel);
-    Label _label_3 = new Label(panel);
-    _label_3.setText("¿Cuantos finales desaprobados?");
-    this.crearTextBoxSoloParaNumeros("encuesta.finalesDesaprobados", panel);
-    Label _label_4 = new Label(panel);
-    _label_4.setText("¿Cuantos cursadas aprobaste?");
-    this.crearTextBoxSoloParaNumeros("encuesta.cursadasAprobadas", panel);
+  public Binding<Object, Control, ControlBuilder> crearInformacionParaPeso(final Panel panel) {
+    Binding<Object, Control, ControlBuilder> _xblockexpression = null;
+    {
+      Label _label = new Label(panel);
+      _label.setText("Elegí la carrera que estudias");
+      Selector<Carrera> _selector = new Selector<Carrera>(panel);
+      final Procedure1<Selector<Carrera>> _function = new Procedure1<Selector<Carrera>>() {
+        public void apply(final Selector<Carrera> it) {
+          it.allowNull(false);
+          it.<Object, ControlBuilder>bindValueToProperty("carrera");
+          EncuestaAppModel _modelObject = EncuestaWindow.this.getModelObject();
+          ObservableProperty<Object> _observableProperty = new ObservableProperty<Object>(_modelObject, "carrerasPosibles");
+          Binding<Object, Selector<Carrera>, ListBuilder<Carrera>> propiedadModelos = it.<Object>bindItems(_observableProperty);
+          PropertyAdapter _propertyAdapter = new PropertyAdapter(Carrera.class, "nombre");
+          propiedadModelos.setAdapter(_propertyAdapter);
+        }
+      };
+      ObjectExtensions.<Selector<Carrera>>operator_doubleArrow(_selector, _function);
+      Label _label_1 = new Label(panel);
+      _label_1.setText("Año en el que ingresaste a la facu:");
+      this.crearTextBoxSoloParaNumeros("encuesta.añoIngreso", panel);
+      Label _label_2 = new Label(panel);
+      _label_2.setText("¿Cuantos finales aprobaste?");
+      this.crearTextBoxSoloParaNumeros("encuesta.finalesAprobados", panel);
+      Label _label_3 = new Label(panel);
+      _label_3.setText("¿Cuantos finales desaprobados?");
+      this.crearTextBoxSoloParaNumeros("encuesta.finalesDesaprobados", panel);
+      Label _label_4 = new Label(panel);
+      _label_4.setText("¿Cuantos cursadas aprobaste?");
+      this.crearTextBoxSoloParaNumeros("encuesta.cursadasAprobadas", panel);
+      Label _label_5 = new Label(panel);
+      _label_5.setText("¿Cual es tu mail?");
+      TextBox _textBox = new TextBox(panel);
+      _xblockexpression = _textBox.<Object, ControlBuilder>bindValueToProperty("encuesta.mail");
+    }
+    return _xblockexpression;
   }
   
   public void crearTextBoxSoloParaNumeros(final String propertyASetear, final Panel container) {

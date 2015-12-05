@@ -5,8 +5,9 @@ import org.uqbar.arena.widgets.Panel
 import org.uqbar.arena.widgets.Label
 import org.uqbar.arena.windows.WindowOwner
 import encuesta.applicationModel.EncuestaAppModel
+import org.uqbar.arena.windows.Dialog
 
-class GraciasPorResponderWindow extends SimpleWindow<EncuestaAppModel>{
+class GraciasPorResponderWindow extends Dialog<EncuestaAppModel>{
 	
 	new(WindowOwner parent) {
 		super(parent, new EncuestaAppModel)
@@ -17,7 +18,7 @@ class GraciasPorResponderWindow extends SimpleWindow<EncuestaAppModel>{
 	}
 	
 	override protected createFormPanel(Panel mainPanel) {
-		new Label(mainPanel).text="Graciasporresponder!"
+		new Label(mainPanel).text="Gracias por responder!"
 	}
 	
 }
