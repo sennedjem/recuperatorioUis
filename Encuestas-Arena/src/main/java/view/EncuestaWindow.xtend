@@ -29,7 +29,7 @@ class EncuestaWindow extends SimpleWindow<EncuestaAppModel>{
 	}
 	
 	override protected createFormPanel(Panel mainPanel) {
-		new Label(mainPanel).text = "Intencióndecursada"
+		new Label(mainPanel).text = "Intención de cursada"
 		this.crearInformacionParaPeso(mainPanel)
 		this.crearInformacionParaCursadas(mainPanel)
 	}
