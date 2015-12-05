@@ -2,12 +2,12 @@ package runnable;
 
 import org.uqbar.arena.Application;
 import org.uqbar.arena.windows.Window;
+import view.EncuestaWindow;
 
 @SuppressWarnings("all")
 public class EncuestaApplication extends Application {
   protected Window<?> createMainWindow() {
-    throw new Error("Unresolved compilation problems:"
-      + "\nEncuestaWindow cannot be resolved.");
+    return new EncuestaWindow(this);
   }
   
   public static void main(final String[] args) {

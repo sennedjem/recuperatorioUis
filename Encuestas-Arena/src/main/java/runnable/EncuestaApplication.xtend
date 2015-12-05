@@ -1,8 +1,7 @@
 package runnable
 
 import org.uqbar.arena.Application
-
-
+import view.EncuestaWindow
 
 class EncuestaApplication extends Application{
 	override protected createMainWindow() {
