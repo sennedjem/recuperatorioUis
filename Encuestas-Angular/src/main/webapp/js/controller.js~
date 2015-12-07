@@ -15,11 +15,12 @@ app.service('EncuestaService', function($http) {
 	responderEncuesta: function(respuesta,callback) {
 	$http.get('/responder', respuesta).success(callback);
   },
-  getCarreras: function(){
-
+  getCarreras: function(callback){
+	$http.get('/carreras').success(callback);
   },
 
   getTurnos: function(){
+	$http.get('/turnos').success(callback);
   }
  }
 });
@@ -41,4 +42,25 @@ app.controller('ResponderCtrl', function($scope, $location, $routeParams, Encues
    $scope.materiaSeleccionada = {};
    $scope.turnoSeleccionado = {};
   }
-}
+
+  $scope.contestar = function() {
+    //Chequeamos los campos obligatorios
+    if($scope.respuesta.materias.length <= 0) {
+      alert('Debe ingresar materias para continuar');
+      return;
+    }
+    if(!$scope.carreraSeleccionada){
+       alert('Debe seleccionar una carrera');   
+       return;
+    }
+    if(!$scope.respuesta.anioIngreso){
+       alert('Debe indicar el año de ingreso a la facultad');
+       return;
+    }  
+    //Todo Ok, impactamos en el server
+    $scope.respuesta.carreraId = $scope.carreraSeleccionada.id;
+    EncuestaService.responderEncuesta($scope.respuesta. function(data){
+       $location.path('gracias');
+    });
+  }
+});

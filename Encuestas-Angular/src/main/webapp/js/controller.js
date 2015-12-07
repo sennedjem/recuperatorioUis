@@ -2,6 +2,13 @@
 
 var app = angular.module('encuestaApp',['ngRoute']);
 
+app.controller("EncuestaCtrl",function($scope,ServiceEncuesta){
+	var autenticar=function(){
+		$scope.email=$('.login input').val()
+		
+	}
+})
+
 app.config(function($routeProvider) {
   $routeProvider.when('/', { templateUrl : 'pages/index.html', controller: 'LoginCtrl'})
 	.when('/responder/:mail', {templateUrl : 'pages/responder.html',controller :
@@ -15,11 +22,12 @@ app.service('EncuestaService', function($http) {
 	responderEncuesta: function(respuesta,callback) {
 	$http.get('/responder', respuesta).success(callback);
   },
-  getCarreras: function(){
-
+  getCarreras: function(callback){
+	$http.get('/carreras').success(callback);
   },
 
   getTurnos: function(){
+	$http.get('/turnos').success(callback);
   }
  }
 });

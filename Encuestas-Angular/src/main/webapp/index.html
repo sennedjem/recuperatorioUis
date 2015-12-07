@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html ng-app="encuestasApp">
+<html ng-app="encuestaApp">
 <head>
 	<script src="js/jquery-1.11.3.min.js"></script>
 	<script src="node_modules/angular/angular.min.js"></script>
@@ -14,23 +14,22 @@
 
 	<!--Angular  -->
 	<script src="js/controller.js"></script>
-	<script src="js/directives.js"></script>
 
 
 	<meta charset="UTF-8">
 	<title> Duelo de leyendas </title>
 </head>
 
-<body ng-controller='EncuestaCtrl'>
+<body ng-controller='LoginCtrl'>
 	<div class="home">
 	  <div class="mensaje">
 		<span>Estamos tratando de mejorar la oferta de horarios de la facu<span>
 		<span>Ayudanos respondiendo la encuesta, solo te tomara 10 minutos</span>
 	  </div>
 	  <div class="login">
-		<input type="text" placeholder="Ingresa tu mail"ng-model="user.mail"/>
-		<button type="submit" ng-click="autenticar()"> Responder </button>
+		<input type="text" placeholder="Ingresa tu mail"ng-model="email"/>
+		<a type="button" href="paginas/encuesta" ng-click="autenticar()"> Responder </a>
 	  </div>
 	</div>
-	</body>
+</body>
 	</html>

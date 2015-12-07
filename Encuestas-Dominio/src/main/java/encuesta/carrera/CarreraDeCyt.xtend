@@ -14,8 +14,8 @@ class CarreraDeCyt {
 	var String nombre
 	
 	new(String nom){
-		var lista = #["Discreta","Algebra","IngenieriaySociedad","MatematicaSuperior",
-		"ParadigmasdeProgramacion","Algoritmos","Sintaxis","ResistenciasdeMateriales"].toList
+		var lista = #["Discreta","Algebra","Ingenieria y Sociedad","Matematica Superior",
+		"Paradigmas de Programacion","Algoritmos","Sintaxis","Resistencias de Materiales"].toList
 		for(String ls: lista){
 			var materia= new Materia(ls)
 			materias.add(materia)
