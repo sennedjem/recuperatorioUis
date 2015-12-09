@@ -10,6 +10,10 @@ class Materia {
 	String nombre
 	
 		
+	new() {
+		
+
+	}
 	new(String nom) {
 		this.nombre = nom
 

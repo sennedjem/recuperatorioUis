@@ -12,6 +12,9 @@ class Curso {
 	Materia materia
 	Turno turno
 	
+	new(){
+	}
+	
 	new(Materia mat, Turno turn){
 		materia = mat
 		turno = turn

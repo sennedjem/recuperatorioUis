@@ -10,6 +10,9 @@ import org.uqbar.commons.utils.Observable;
 public class Materia {
   private String nombre;
   
+  public Materia() {
+  }
+  
   public Materia(final String nom) {
     this.nombre = nom;
   }

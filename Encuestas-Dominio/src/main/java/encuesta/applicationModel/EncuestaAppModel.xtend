@@ -48,6 +48,10 @@ class EncuestaAppModel {
 		encuestas.filter[mail.equals(encuesta.mail)].size>0
 	}
 	
+	public def elMailYaEsta(String mailP) {
+		encuestas.filter[mail.equals(mailP)].size>0
+	}
+	
 	def agregarMateriaSeleccionada(){
 		if(encuesta.estaMateria(materiaSeleccionada)){throw new UserException("Ya ingresaste esa materia")}
 		else{
@@ -73,7 +77,7 @@ class EncuestaAppModel {
 	}
 	
 	def List<Carrera> getCarrerasPosibles(){
-		new RepoEncuestas().getCarrerasPosibles
+		new RepoEncuestas().carreras
 	}
 	
 	

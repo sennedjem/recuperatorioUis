@@ -4,7 +4,6 @@ import encuesta.applicationModel.RepoEncuestas;
 import encuesta.carrera.Carrera;
 import encuesta.controller.Respuesta;
 import encuesta.encuesta.Encuesta;
-import encuesta.materia.Materia;
 import encuesta.materia.Turno;
 import java.io.IOException;
 import java.util.List;
@@ -14,11 +13,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.eclipse.jetty.server.Request;
-import org.eclipse.xtext.xbase.lib.Conversions;
 import org.eclipse.xtext.xbase.lib.Extension;
-import org.eclipse.xtext.xbase.lib.Functions.Function1;
-import org.eclipse.xtext.xbase.lib.IterableExtensions;
-import org.uqbar.commons.model.UserException;
 import org.uqbar.xtrest.api.Result;
 import org.uqbar.xtrest.api.XTRest;
 import org.uqbar.xtrest.api.annotation.Body;
@@ -42,8 +37,8 @@ public class EncuestaController extends ResultFactory {
     Result _xblockexpression = null;
     {
       response.setContentType(ContentType.APPLICATION_JSON);
-      List<Carrera> _carrerasPosibles = this.repo.getCarrerasPosibles();
-      String _json = this._jSONUtils.toJson(_carrerasPosibles);
+      List<Carrera> _carreras = this.repo.getCarreras();
+      String _json = this._jSONUtils.toJson(_carreras);
       _xblockexpression = ResultFactory.ok(_json);
     }
     return _xblockexpression;
@@ -61,51 +56,32 @@ public class EncuestaController extends ResultFactory {
     return _xblockexpression;
   }
   
-  @Post("/responder")
+  @Get("/responder/:mail")
+  public Result responderSiElMailFueUtilizado(final String mail, final String target, final Request baseRequest, final HttpServletRequest request, final HttpServletResponse response) {
+    Result _xblockexpression = null;
+    {
+      final boolean elMailYaFueUtilizado = this.repo.elMailYaEsta(mail);
+      response.setContentType(ContentType.APPLICATION_JSON);
+      String _json = this._jSONUtils.toJson(Boolean.valueOf(elMailYaFueUtilizado));
+      _xblockexpression = ResultFactory.ok(_json);
+    }
+    return _xblockexpression;
+  }
+  
+  @Post("/mandarRespuesta")
   public Result responder(@Body final String body, final String target, final Request baseRequest, final HttpServletRequest request, final HttpServletResponse response) {
     Result _xblockexpression = null;
     {
       Respuesta respuesta = this._jSONUtils.<Respuesta>fromJson(body, Respuesta.class);
-      String _carreraNombre = respuesta.getCarreraNombre();
-      final Carrera carrera = this.findCarrera(_carreraNombre);
-      List<Materia> _materias = respuesta.getMaterias();
-      final Function1<Materia, Boolean> _function = new Function1<Materia, Boolean>() {
-        public Boolean apply(final Materia materia) {
-          return Boolean.valueOf(carrera.tieneEnPlanDeEstudio(materia));
-        }
-      };
-      boolean _forall = IterableExtensions.<Materia>forall(_materias, _function);
-      boolean _not = (!_forall);
-      if (_not) {
-        throw new UserException("No puede mezclar materias de distintas carreras");
-      }
-      Encuesta encuesta = respuesta.generarEncuesta();
-      String _mail = respuesta.getMail();
-      this.repo.agregarRespuesta(_mail, encuesta);
+      Encuesta encuesta = respuesta.generarEncuesta(this.repo);
+      this.repo.agregarRespuesta(encuesta);
       _xblockexpression = ResultFactory.ok();
     }
     return _xblockexpression;
   }
   
-  public Carrera findCarrera(final String nombreCarrera) {
-    Carrera _xblockexpression = null;
-    {
-      List<Carrera> _carrerasPosibles = this.repo.getCarrerasPosibles();
-      final Function1<Carrera, Boolean> _function = new Function1<Carrera, Boolean>() {
-        public Boolean apply(final Carrera it) {
-          String _nombre = it.getNombre();
-          return Boolean.valueOf(_nombre.equals(nombreCarrera));
-        }
-      };
-      Iterable<Carrera> _filter = IterableExtensions.<Carrera>filter(_carrerasPosibles, _function);
-      Carrera carrera = ((Carrera[])Conversions.unwrapArray(_filter, Carrera.class))[0];
-      _xblockexpression = carrera;
-    }
-    return _xblockexpression;
-  }
-  
   public static void main(final String[] args) {
-    XTRest.start(EncuestaController.class, 9000);
+    XTRest.start(EncuestaController.class, 9800);
   }
   
   public void handle(final String target, final Request baseRequest, final HttpServletRequest request, final HttpServletResponse response) throws IOException, ServletException {
@@ -145,7 +121,25 @@ public class EncuestaController extends ResultFactory {
     }
     {
     	Matcher matcher = 
-    		Pattern.compile("/responder").matcher(target);
+    		Pattern.compile("/responder/(\\w+)").matcher(target);
+    	if (request.getMethod().equalsIgnoreCase("Get") && matcher.matches()) {
+    		// take parameters from request
+    		
+    		// take variables from url
+    		String mail = matcher.group(1);
+    		
+    		
+    	    Result result = responderSiElMailFueUtilizado(mail, target, baseRequest, request, response);
+    	    result.process(response);
+    	    
+    		response.addHeader("Access-Control-Allow-Origin", "*");
+    	    baseRequest.setHandled(true);
+    	    return;
+    	}
+    }
+    {
+    	Matcher matcher = 
+    		Pattern.compile("/mandarRespuesta").matcher(target);
     	if (request.getMethod().equalsIgnoreCase("Post") && matcher.matches()) {
     		// take parameters from request
     		String body = readBodyAsString(request);
@@ -184,8 +178,13 @@ public class EncuestaController extends ResultFactory {
     	+ "				<td></td>"
     	+ "			</tr>"
     	+ "			<tr>"
+    	+ "				<td>GET</td>"
+    	+ "				<td>/responder/:mail</td>"
+    	+ "				<td>mail</td>"
+    	+ "			</tr>"
+    	+ "			<tr>"
     	+ "				<td>POST</td>"
-    	+ "				<td>/responder</td>"
+    	+ "				<td>/mandarRespuesta</td>"
     	+ "				<td>body</td>"
     	+ "			</tr>"
     	+ "		</tbody>"

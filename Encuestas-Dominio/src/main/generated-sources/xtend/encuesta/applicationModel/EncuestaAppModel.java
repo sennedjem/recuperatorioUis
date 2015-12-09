@@ -77,6 +77,18 @@ public class EncuestaAppModel {
     return (_size > 0);
   }
   
+  public boolean elMailYaEsta(final String mailP) {
+    final Function1<Encuesta, Boolean> _function = new Function1<Encuesta, Boolean>() {
+      public Boolean apply(final Encuesta it) {
+        String _mail = it.getMail();
+        return Boolean.valueOf(_mail.equals(mailP));
+      }
+    };
+    Iterable<Encuesta> _filter = IterableExtensions.<Encuesta>filter(this.encuestas, _function);
+    int _size = IterableExtensions.size(_filter);
+    return (_size > 0);
+  }
+  
   public void agregarMateriaSeleccionada() {
     boolean _estaMateria = this.encuesta.estaMateria(this.materiaSeleccionada);
     if (_estaMateria) {
@@ -109,7 +121,7 @@ public class EncuestaAppModel {
   
   public List<Carrera> getCarrerasPosibles() {
     RepoEncuestas _repoEncuestas = new RepoEncuestas();
-    return _repoEncuestas.getCarrerasPosibles();
+    return _repoEncuestas.getCarreras();
   }
   
   public List<Turno> getTurnosPosibles() {

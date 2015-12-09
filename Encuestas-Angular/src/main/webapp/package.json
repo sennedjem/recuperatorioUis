@@ -1,0 +1,10 @@
+{
+  "name": "conversor-ui-angular",
+  "description": "Conversor AngularJS",
+  "author": "",
+  "dependencies": {
+    "angular": "1.4.8"
+    
+    
+  }
+}

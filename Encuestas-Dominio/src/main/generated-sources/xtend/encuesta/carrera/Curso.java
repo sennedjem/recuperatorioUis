@@ -14,6 +14,9 @@ public class Curso {
   
   private Turno turno;
   
+  public Curso() {
+  }
+  
   public Curso(final Materia mat, final Turno turn) {
     this.materia = mat;
     this.turno = turn;

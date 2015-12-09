@@ -7,7 +7,7 @@
 		<groupId>org.uqbar-project</groupId>
 		<artifactId>uqbar-xtend-parent</artifactId>
 		<version>2.7.3</version>
-	</parent>
+	</parent> 
 
 	<properties>
 		<jetty.version>9.0.2.v20130417</jetty.version>
@@ -28,6 +28,11 @@
 		  	<dependency>
   		<groupId>edu.unq.ciu.seblop.recu</groupId>
   		<artifactId>encuestas.dominio</artifactId>
+  		<version>1.0</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>edu.unq.ciu.seblop.recu</groupId>
+  		<artifactId>encuestas.arena</artifactId>
   		<version>1.0</version>
   	</dependency>
 	</dependencies>

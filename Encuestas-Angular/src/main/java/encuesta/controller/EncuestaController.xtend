@@ -15,6 +15,7 @@ import org.uqbar.xtrest.api.annotation.Post
 import encuesta.carrera.Carrera
 import org.uqbar.commons.model.UserException
 import encuesta.encuesta.Encuesta
+import encuesta.applicationModel.EncuestaAppModel
 
 @Controller
 class EncuestaController {
@@ -25,7 +26,7 @@ class EncuestaController {
 		@Get('/carreras')
 		def Result carreras(){
 			response.contentType = ContentType.APPLICATION_JSON
-			ok(repo.carrerasPosibles.toJson)
+			ok(repo.carreras.toJson)
 		}
 		
 		@Get('/turnos')
@@ -34,23 +35,22 @@ class EncuestaController {
 			ok(Turno.values.toJson)
 		}	
 		
-		@Post('/responder')
-		def Result responder(@Body String body){
-			var Respuesta respuesta = body.fromJson(Respuesta)
-			val Carrera carrera = findCarrera(respuesta.carreraNombre)
-			if (! respuesta.materias.forall[materia | carrera.tieneEnPlanDeEstudio(materia)] ){
-				throw new UserException("No puede mezclar materias de distintas carreras")
-			}
-			var Encuesta encuesta = respuesta.generarEncuesta();
-			repo.agregarRespuesta(respuesta.mail,encuesta)ok();
-		}
-	
-		def Carrera findCarrera(String nombreCarrera) {
-			var Carrera carrera = repo.carrerasPosibles.filter[nombre.equals(nombreCarrera)].get(0)
-			carrera
+		@Get("/responder/:mail")
+		def Result responderSiElMailFueUtilizado(){
+		val elMailYaFueUtilizado = repo.elMailYaEsta(mail)
+		response.contentType = ContentType.APPLICATION_JSON
+		ok(elMailYaFueUtilizado.toJson)
 		}
 		
+		@Post('/mandarRespuesta')
+		def Result responder(@Body String body){
+			var Respuesta respuesta = body.fromJson(Respuesta)
+			var Encuesta encuesta = respuesta.generarEncuesta(repo);
+			repo.agregarRespuesta(encuesta)ok();
+		}
+	
+		
 		def static void main(String[]args){
-			XTRest.start(EncuestaController,9000)
+			XTRest.start(EncuestaController,9800)
 		}
 }

@@ -10,14 +10,20 @@ app.config(function($routeProvider){
 
 app.service('EncuestaService',function($http){
 	return{
+		verificarMail:function(mail,callback){
+			$http.get('/responder/'+mail).success(callback);
+		},
 		responderEncuesta:function(respuesta,callback){
-			$http.get('/responder/'+respuesta).success(callback);
+			$http({
+			method:'POST',
+			url:'/mandarRespuesta',
+			data: respuesta}).then(function successCallback(){callback()},function(){})
 		},
-		getCarreras:function(aEjecutar){
-			$http.get('/carreras').success(aEjecutar);
+		getCarreras:function(callback){
+			$http.get('/carreras').success(callback);
 		},
-		getTurnos:function(aEjecutar){
-			$http.get('/turnos').success(aEjecutar);
+		getTurnos:function(callback){
+			$http.get('/turnos').success(callback);
 		}
 	}
 });
@@ -27,7 +33,7 @@ app.controller('LoginCtrl',function($scope,$location,EncuestaService){
 	$scope.mail=""
 	$scope.autenticar=function(){
 
-	EncuestaService.responderEncuesta($scope.mail,function(elMailEsta){
+	EncuestaService.verificarMail($scope.mail,function(elMailEsta){
 		if(elMailEsta){alert("Ya utilizaste el mail")}
 		else{$location.path('/responder/'+$scope.mail);}})
 	}
@@ -45,12 +51,30 @@ EncuestaService.getCarreras(function(data){
 });
 
 $scope.respuesta={mail:$routeParams.mail,materias:[]};
-
+	contains = function(listElement,element) {
+	    
+	    for (var i = 0; i < listElement.length; i++) {
+		if (listElement[i].nombre == element.nombre) {
+		    return true;
+		}
+	    }
+	    return false;
+	}
 
 	$scope.agregarMateria=function(){
 
-		if(!$scope.materiaSeleccionada | !$scope.turnoSeleccionado){
-		alert('Te falto elegir materia o turno');
+		
+		if(!$scope.materiaSeleccionada){
+			alert('No seleccionaste ninguna materia');
+			return;
+		}
+		if(!$scope.turnoSeleccionado){
+			alert('No seleccionaste ningun turno');
+			return;
+		}
+		if(contains($scope.respuesta.materias,$scope.materiaSeleccionada)){
+			alert('Ya ingresaste esa materia');
+			return;
 		}
 		else {
 		$scope.respuesta.materias.push({materia:$scope.materiaSeleccionada,turno:$scope.turnoSeleccionado});
@@ -58,7 +82,8 @@ $scope.respuesta={mail:$routeParams.mail,materias:[]};
 		$scope.turnoSeleccionado=null;
 		}
 	}
-
+	
+	
 	$scope.contestar=function(){
 		//Checkeamos los campos obligatorios
 		if($scope.respuesta.materias.length<=0){
@@ -82,13 +107,15 @@ $scope.respuesta={mail:$routeParams.mail,materias:[]};
 			return;
 		}
 		if(!$scope.respuesta.cursadasAprobadas){
-			alert('Debe indicar la cantidad de finalesDesaprobados');
+			alert('Debe indicar la cantidad de cursadasAprobadas');
 			return;
 		}
 		//TodoOK,impactamosenelserver
-		$scope.respuesta.carreraId=$scope.carreraSeleccionada.id;
-		EncuestaService.responderEncuesta($scope.respuesta,function(data){
+		$scope.respuesta.carreraNombre=$scope.carreraSeleccionada.nombre;
+		EncuestaService.responderEncuesta($scope.respuesta,function(){
 		$location.path('gracias');
+		
 		});
+	
 	}
 });
