@@ -1,35 +1,21 @@
-<!DOCTYPE html>
-<html ng-app="encuestaApp">
+<html>
 <head>
-	<script src="js/jquery-1.11.3.min.js"></script>
-	<script src="node_modules/angular/angular.min.js"></script>
-
+	<title>Login</title>
 	<!-- Bootstrap-->
 	<link rel="stylesheet" href="css/bootstrap.css">
 	<link rel="stylesheet" href="css/bootstrap-theme.css">
 	<script src="js/bootstrap.js"></script>
 
-	<!-- Mi estilo en css-->
-	<link rel="stylesheet" href="css/myStyle.css">
-
-	<!--Angular  -->
-	<script src="js/controller.js"></script>
-
-
-	<meta charset="UTF-8">
-	<title> Duelo de leyendas </title>
+	<!-- ANGULAR -->
+  	<script src="js/jquery-1.11.3.min"></script>
+	<script src="node_modules/angular/angular.min.js"></script>
+  	<script src="node_modules/angular-route/angular-route.min.js"></script>
+	<script src="js/controller.js"> </script>
+	 
 </head>
-
-<body ng-controller='LoginCtrl'>
-	<div class="home">
-	  <div class="mensaje">
-		<span>Estamos tratando de mejorar la oferta de horarios de la facu<span>
-		<span>Ayudanos respondiendo la encuesta, solo te tomara 10 minutos</span>
-	  </div>
-	  <div class="login">
-		<input type="text" placeholder="Ingresa tu mail"ng-model="email"/>
-		<a type="button" href="paginas/encuesta" ng-click="autenticar()"> Responder </a>
-	  </div>
+<body ng-app="encuestaApp">
+	<div ng-view>
 	</div>
+
 </body>
-	</html>
+</html>
